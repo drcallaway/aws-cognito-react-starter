@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
-import { Signup } from "./components/Signup";
-import { Landing } from "./components/Landing";
+import SignIn from "./components/SignIn";
+import SignUp from "./components/SignUp";
+import Landing from "./components/Landing";
 import "./App.css";
 
 function App() {
@@ -11,15 +12,16 @@ function App() {
           <div className="navbar-content">
             <Link className="navbar-content-title" to="/">AWS Cognito React Starter</Link>
             <div className="navbar-content-links">
-              <a href="#">Log in</a>
+              <Link to="/signin">Sign in</Link>
               <Link to="/signup">Sign up</Link>
             </div>
           </div>
         </nav>
         <div className="content">
           <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route path="/signup" element={<Signup />} />
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="*" element={<Landing />} />
           </Routes>
         </div>
       </BrowserRouter>
