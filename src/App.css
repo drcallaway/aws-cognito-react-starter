@@ -1,0 +1,33 @@
+#root {
+  margin: 0 auto;
+}
+
+.navbar {
+  background-color: lightblue;
+  height: 75px;
+}
+
+.navbar-content {
+  margin: 0 auto;
+  max-width: 1200px;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-content-title {
+  font-size: 1.5rem;
+  text-decoration: none;
+  color: black;
+}
+
+.navbar-content-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.content {
+  margin: 20px auto;
+  max-width: 1200px;
+}
