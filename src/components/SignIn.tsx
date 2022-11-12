@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -14,18 +14,29 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import { getEmailAddress, setEmailAddress } from "../util/localStorage";
-import { AuthContext } from "../auth/AuthUtil";
+import { AuthContext } from "../auth/authUtil";
+import { useValidEmail, useValidPassword } from "../auth/hooks";
 
 const theme = createTheme();
 
 export default function SignIn() {
+  const storedEmail = getEmailAddress();
+  const { email, setEmail, emailIsValid } = useValidEmail(storedEmail);
+  const {
+    password,
+    setPassword,
+    passwordIsValid,
+  } = useValidPassword();
   const [error, setError] = useState("");
   const [working, setWorking] = useState(false);
-  const storedEmail = getEmailAddress();
   const [rememberMe, setRememberMe] = useState(!!storedEmail);
+  const [buttonEnabled, setButtonEnabled] = useState(false);
   const authContext = useContext(AuthContext);
   const navigate = useNavigate();
-  const passwordRef = useRef<HTMLFormElement>();
+
+  useEffect(() => {
+    setButtonEnabled(emailIsValid && passwordIsValid && !working);
+  }, [emailIsValid, passwordIsValid, working]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -39,10 +50,6 @@ export default function SignIn() {
       await authContext.signInWithEmail(email, password);
       navigate("/console");
     } catch (err) {
-      if (passwordRef?.current) {
-        passwordRef.current.value = "";
-        passwordRef.current.focus();
-      }
       if (err instanceof Error) {
         setError(err.message);
       }
@@ -90,8 +97,12 @@ export default function SignIn() {
               label="Email Address"
               name="email"
               autoComplete="email"
+              error={!!email && !emailIsValid}
               autoFocus={!storedEmail}
-              inputRef={input => storedEmail && input && (input.value = storedEmail)}
+              value={email}
+              onChange={(evt: React.ChangeEvent<HTMLTextAreaElement>) => {
+                setEmail(evt.target.value);
+              }}
             />
             <TextField
               margin="normal"
@@ -103,18 +114,22 @@ export default function SignIn() {
               id="password"
               autoComplete="current-password"
               autoFocus={!!storedEmail}
-              inputRef={passwordRef}
-            />
+              error={!!password && !passwordIsValid}
+              value={password}
+              onChange={(evt: React.ChangeEvent<HTMLTextAreaElement>) => {
+                setPassword(evt.target.value);
+              }}
+          />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" checked={rememberMe} onChange={handleCheck} />}
               label="Remember me"
             />
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} disabled={working} >
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} disabled={!buttonEnabled} >
               Sign In
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                <Link href="/forgotPassword" variant="body2">
                   Forgot password?
                 </Link>
               </Grid>

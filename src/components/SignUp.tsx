@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -11,21 +11,8 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../auth/AuthUtil";
+import { AuthContext } from "../auth/authUtil";
 import { useValidEmail, useValidPassword } from "../auth/hooks";
-
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        AWS Cognito React Starter
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
 
 const theme = createTheme();
 
@@ -43,8 +30,13 @@ export default function SignUp() {
   const [error, setError] = useState("");
   const [code, setCode] = useState("");
   const [working, setWorking] = useState(false);
+  const [buttonEnabled, setButtonEnabled] = useState(false);
   const authContext = useContext(AuthContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setButtonEnabled(emailIsValid && passwordIsValid && confirmPasswordIsValid && !working);
+  }, [emailIsValid, passwordIsValid, confirmPasswordIsValid, working]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -107,7 +99,7 @@ export default function SignUp() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
-                error={!emailIsValid}
+                error={!!email && !emailIsValid}
                 value={email}
                 onChange={(evt: React.ChangeEvent<HTMLTextAreaElement>) => {
                   setEmail(evt.target.value);
@@ -122,7 +114,7 @@ export default function SignUp() {
                 label="Password"
                 type="password"
                 id="password"
-                error={!passwordIsValid}
+                error={!!password && !passwordIsValid}
                 value={password}
                 onChange={(evt: React.ChangeEvent<HTMLTextAreaElement>) => {
                   setPassword(evt.target.value);
@@ -137,7 +129,7 @@ export default function SignUp() {
                 label="Confirm Password"
                 type="password"
                 id="confirmPassword"
-                error={!confirmPasswordIsValid}
+                error={!!password && !confirmPasswordIsValid}
                 value={confirmPassword}
                 onChange={(evt: React.ChangeEvent<HTMLTextAreaElement>) => {
                   setConfirmPassword(evt.target.value);
@@ -150,7 +142,7 @@ export default function SignUp() {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
-            disabled={working}
+            disabled={!buttonEnabled}
           >
             Sign Up
           </Button>
@@ -163,7 +155,6 @@ export default function SignUp() {
           </Grid>
         </Box>
       </Box>
-      <Copyright sx={{ mt: 5 }} />
     </>
   );
 

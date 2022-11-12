@@ -1,5 +1,5 @@
 import { AuthenticationDetails, CognitoUser, CognitoUserAttribute } from 'amazon-cognito-identity-js';
-import userPool from './userPool';
+import userPool from "./userPool";
 
 let currentUser: any = userPool.getCurrentUser()
 

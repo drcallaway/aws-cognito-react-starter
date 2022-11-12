@@ -11,11 +11,6 @@ export const useValidEmail = (initialValue: string = '') => {
       email: yup.string().email().required(),
     });
 
-    if (email.length === 0) {
-      setEmailIsValid(true);
-      return;
-    }
-
     const isValid = emailSchema.isValidSync({ email });
 
     setEmailIsValid(isValid);
@@ -31,8 +26,8 @@ export const useValidPassword = (initialPassword = '', initialConfirmPassword = 
   const [confirmPasswordIsValid, setConfirmPasswordIsValid] = useState(true);
 
   useEffect(() => {
-    setPasswordIsValid(!password || yup.string().min(8).isValidSync(password));
-    setConfirmPasswordIsValid((!password && !confirmPassword) || password === confirmPassword);
+    setPasswordIsValid(yup.string().min(8).isValidSync(password));
+    setConfirmPasswordIsValid(password === confirmPassword);
   }, [password, confirmPassword]);
 
   return { password, setPassword, confirmPassword, setConfirmPassword, passwordIsValid, confirmPasswordIsValid };

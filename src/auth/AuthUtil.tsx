@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react'
-import * as cognito from './cognito'
+import React, { useState, useEffect, useContext } from "react";
+import * as cognito from "./cognito";
 
 export enum AuthStatus {
   Loading,
@@ -8,155 +8,162 @@ export enum AuthStatus {
 }
 
 export interface IAuth {
-  sessionInfo?: { username?: string; email?: string; sub?: string; accessToken?: string; refreshToken?: string }
-  attrInfo?: any
-  authStatus?: AuthStatus
-  signInWithEmail?: any
-  signUpWithEmail?: any
-  signOut?: any
-  verifyCode?: any
-  getSession?: any
-  sendCode?: any
-  forgotPassword?: any
-  changePassword?: any
-  getAttributes?: any
-  setAttribute?: any
+  sessionInfo?: {
+    username?: string;
+    email?: string;
+    sub?: string;
+    accessToken?: string;
+    refreshToken?: string;
+  };
+  attrInfo?: any;
+  authStatus?: AuthStatus;
+  signInWithEmail?: any;
+  signUpWithEmail?: any;
+  signOut?: any;
+  verifyCode?: any;
+  getSession?: any;
+  sendCode?: any;
+  forgotPassword?: any;
+  changePassword?: any;
+  getAttributes?: any;
+  setAttribute?: any;
 }
 
 const defaultState: IAuth = {
   sessionInfo: {},
   authStatus: AuthStatus.Loading,
-}
+};
 
 type Props = {
-  children?: React.ReactNode
-}
+  children?: React.ReactNode;
+};
 
-export const AuthContext = React.createContext(defaultState)
+export const AuthContext = React.createContext(defaultState);
 
 export const AuthIsSignedIn = ({ children }: Props): any => {
-  const { authStatus }: IAuth = useContext(AuthContext)
+  const { authStatus }: IAuth = useContext(AuthContext);
 
-  return <>{authStatus === AuthStatus.SignedIn ? children : null}</>
-}
+  return <>{authStatus === AuthStatus.SignedIn ? children : null}</>;
+};
 
 export const AuthIsNotSignedIn = ({ children }: Props): any => {
-  const { authStatus }: IAuth = useContext(AuthContext)
+  const { authStatus }: IAuth = useContext(AuthContext);
 
-  return <>{authStatus === AuthStatus.SignedOut ? children : null}</>
-}
+  return <>{authStatus === AuthStatus.SignedOut ? children : null}</>;
+};
 
 export const AuthProvider = ({ children }: Props) => {
-  const [authStatus, setAuthStatus] = useState(AuthStatus.Loading)
-  const [sessionInfo, setSessionInfo] = useState({})
-  const [attrInfo, setAttrInfo] = useState([])
+  const [authStatus, setAuthStatus] = useState(AuthStatus.Loading);
+  const [sessionInfo, setSessionInfo] = useState({});
+  const [attrInfo, setAttrInfo] = useState([]);
 
   useEffect(() => {
     async function getSessionInfo() {
       try {
-        console.log(authStatus);
-        const session: any = await getSession()
+        const session: any = await getSession();
         setSessionInfo({
           accessToken: session.accessToken.jwtToken,
           refreshToken: session.refreshToken.token,
-        })
-        console.log(session);
-        window.localStorage.setItem('accessToken', `${session.accessToken.jwtToken}`)
-        window.localStorage.setItem('refreshToken', `${session.refreshToken.token}`)
-        await setAttribute({ Name: 'website', Value: 'https://github.com/dbroadhurst/aws-cognito-react' })
-        const attr: any = await getAttributes()
-        setAttrInfo(attr)
-        setAuthStatus(AuthStatus.SignedIn)
+        });
+        window.localStorage.setItem("accessToken", `${session.accessToken.jwtToken}`);
+        window.localStorage.setItem("refreshToken", `${session.refreshToken.token}`);
+        await setAttribute({
+          Name: "website",
+          Value: "https://github.com/dbroadhurst/aws-cognito-react",
+        });
+        const attr: any = await getAttributes();
+        setAttrInfo(attr);
+        setAuthStatus(AuthStatus.SignedIn);
       } catch (err) {
-        setAuthStatus(AuthStatus.SignedOut)
+        setAuthStatus(AuthStatus.SignedOut);
       }
     }
-    getSessionInfo()
-  }, [setAuthStatus, authStatus])
+    getSessionInfo();
+  }, [setAuthStatus, authStatus]);
 
   if (authStatus === AuthStatus.Loading) {
-    return null
+    return null;
   }
 
   async function signInWithEmail(username: string, password: string) {
     try {
-      await cognito.signInWithEmail(username, password)
-      setAuthStatus(AuthStatus.SignedIn)
+      await cognito.signInWithEmail(username, password);
+      setAuthStatus(AuthStatus.SignedIn);
     } catch (err) {
-      setAuthStatus(AuthStatus.SignedOut)
-      throw err
+      setAuthStatus(AuthStatus.SignedOut);
+      throw err;
     }
   }
 
   async function signUpWithEmail(username: string, email: string, password: string) {
     try {
-      await cognito.signUpUserWithEmail(username, email, password)
+      await cognito.signUpUserWithEmail(username, email, password);
     } catch (err) {
-      throw err
+      throw err;
     }
   }
 
   function signOut() {
-    cognito.signOut()
-    setAuthStatus(AuthStatus.SignedOut)
+    cognito.signOut();
+    setAuthStatus(AuthStatus.SignedOut);
   }
 
   async function verifyCode(username: string, code: string) {
     try {
-      await cognito.verifyCode(username, code)
+      await cognito.verifyCode(username, code);
     } catch (err) {
-      throw err
+      throw err;
     }
   }
 
   async function getSession() {
     try {
-      const session = await cognito.getSession()
-      return session
+      const session = await cognito.getSession();
+      return session;
     } catch (err) {
-      throw err
+      throw err;
     }
   }
 
   async function getAttributes() {
     try {
-      const attr = await cognito.getAttributes()
-      return attr
+      const attr = await cognito.getAttributes();
+      return attr;
     } catch (err) {
-      throw err
+      throw err;
     }
   }
 
   async function setAttribute(attr: any) {
     try {
-      const res = await cognito.setAttribute(attr)
-      return res
+      const res = await cognito.setAttribute(attr);
+      return res;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async function sendCode(email: string) {
+    try {
+      await cognito.sendCode(email)
     } catch (err) {
       throw err
     }
   }
 
-  async function sendCode(username: string) {
+  async function forgotPassword(email: string, code: string, password: string) {
     try {
-      await cognito.sendCode(username)
+      await cognito.forgotPassword(email, code, password);
     } catch (err) {
-      throw err
-    }
-  }
-
-  async function forgotPassword(username: string, code: string, password: string) {
-    try {
-      await cognito.forgotPassword(username, code, password)
-    } catch (err) {
-      throw err
+      throw err;
     }
   }
 
   async function changePassword(oldPassword: string, newPassword: string) {
     try {
-      await cognito.changePassword(oldPassword, newPassword)
+      await cognito.changePassword(oldPassword, newPassword);
     } catch (err) {
-      throw err
+      throw err;
     }
   }
 
@@ -174,7 +181,7 @@ export const AuthProvider = ({ children }: Props) => {
     changePassword,
     getAttributes,
     setAttribute,
-  }
+  };
 
-  return <AuthContext.Provider value={state}>{children}</AuthContext.Provider>
-}
+  return <AuthContext.Provider value={state}>{children}</AuthContext.Provider>;
+};

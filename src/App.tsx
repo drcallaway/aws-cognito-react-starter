@@ -3,12 +3,13 @@ import {
   AuthProvider,
   AuthIsSignedIn,
   AuthIsNotSignedIn,
-} from "./auth/AuthUtil";
+} from "./auth/authUtil";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 import SignOut from "./components/SignOut";
 import Landing from "./components/Landing";
 import Console from "./components/Console";
+import ForgotPassword from "./components/ForgotPassword";
 import "./App.css";
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
               <Routes>
                 <Route path="/signin" element={<SignIn />} />
                 <Route path="/signup" element={<SignUp />} />
+                <Route path="/forgotPassword" element={<ForgotPassword />} />
                 <Route path="/" element={<Landing />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
