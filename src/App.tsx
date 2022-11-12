@@ -1,4 +1,3 @@
-import React, { useContext } from "react";
 import { BrowserRouter, Route, Routes, Link, Navigate } from "react-router-dom";
 import {
   AuthProvider,
@@ -9,6 +8,7 @@ import {
 } from "./auth/AuthUtil";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
+import SignOut from "./components/SignOut";
 import Landing from "./components/Landing";
 import Console from "./components/Console";
 import "./App.css";
@@ -24,8 +24,13 @@ function App() {
                 AWS Cognito React Starter
               </Link>
               <div className="navbar-content-links">
-                <Link to="/signin">Sign in</Link>
-                <Link to="/signup">Sign up</Link>
+                <AuthIsNotSignedIn>
+                  <Link to="/signin">Sign in</Link>
+                  <Link to="/signup">Sign up</Link>
+                </AuthIsNotSignedIn>
+                <AuthIsSignedIn>
+                  <Link to="/signout">Sign out</Link>
+                </AuthIsSignedIn>
               </div>
             </div>
           </nav>
@@ -41,6 +46,7 @@ function App() {
             <AuthIsSignedIn>
               <Routes>
                 <Route path="/console" element={<Console />} />
+                <Route path="/signout" element={<SignOut />} />
               </Routes>
             </AuthIsSignedIn>
           </div>
