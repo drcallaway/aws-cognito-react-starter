@@ -14,7 +14,7 @@ import { useValidEmail, useValidPassword } from "../auth/hooks";
 
 const theme = createTheme();
 
-export default function ResetPassword() {
+export default function ForgotPassword() {
   const [error, setError] = useState("");
   const [working, setWorking] = useState(false);
   const [codeSent, setCodeSent] = useState(false);

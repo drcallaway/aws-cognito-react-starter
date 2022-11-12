@@ -8,7 +8,8 @@ import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 import SignOut from "./components/SignOut";
 import Landing from "./components/Landing";
-import Console from "./components/Console";
+import Console from "./components/Dashboard";
+import ChangePassword from "./components/ChangePassword";
 import ForgotPassword from "./components/ForgotPassword";
 import "./App.css";
 
@@ -24,11 +25,12 @@ function App() {
               </Link>
               <div className="navbar-content-links">
                 <AuthIsNotSignedIn>
-                  <Link to="/signin">Sign in</Link>
-                  <Link to="/signup">Sign up</Link>
+                  <Link to="/signin">Sign In</Link>
+                  <Link to="/signup">Sign Up</Link>
                 </AuthIsNotSignedIn>
                 <AuthIsSignedIn>
-                  <Link to="/signout">Sign out</Link>
+                  <Link to="/changePassword">Change Password</Link>
+                  <Link to="/signout">Sign Out</Link>
                 </AuthIsSignedIn>
               </div>
             </div>
@@ -47,6 +49,8 @@ function App() {
               <Routes>
                 <Route path="/console" element={<Console />} />
                 <Route path="/signout" element={<SignOut />} />
+                <Route path="/changePassword" element={<ChangePassword />} />
+                <Route path="*" element={<Navigate to="/console" replace />} />
               </Routes>
             </AuthIsSignedIn>
           </div>
