@@ -34,13 +34,13 @@ type Props = {
 
 export const AuthContext = React.createContext(defaultState)
 
-export const AuthIsSignedIn = ({ children }: Props) => {
+export const AuthIsSignedIn = ({ children }: Props): any => {
   const { authStatus }: IAuth = useContext(AuthContext)
 
   return <>{authStatus === AuthStatus.SignedIn ? children : null}</>
 }
 
-export const AuthIsNotSignedIn = ({ children }: Props) => {
+export const AuthIsNotSignedIn = ({ children }: Props): any => {
   const { authStatus }: IAuth = useContext(AuthContext)
 
   return <>{authStatus === AuthStatus.SignedOut ? children : null}</>
@@ -54,11 +54,13 @@ export const AuthProvider = ({ children }: Props) => {
   useEffect(() => {
     async function getSessionInfo() {
       try {
+        console.log(authStatus);
         const session: any = await getSession()
         setSessionInfo({
           accessToken: session.accessToken.jwtToken,
           refreshToken: session.refreshToken.token,
         })
+        console.log(session);
         window.localStorage.setItem('accessToken', `${session.accessToken.jwtToken}`)
         window.localStorage.setItem('refreshToken', `${session.refreshToken.token}`)
         await setAttribute({ Name: 'website', Value: 'https://github.com/dbroadhurst/aws-cognito-react' })

@@ -1,8 +1,16 @@
-import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
-import { AuthProvider } from "./auth/AuthUtil";
+import React, { useContext } from "react";
+import { BrowserRouter, Route, Routes, Link, Navigate } from "react-router-dom";
+import {
+  AuthProvider,
+  AuthContext,
+  AuthStatus,
+  AuthIsSignedIn,
+  AuthIsNotSignedIn,
+} from "./auth/AuthUtil";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 import Landing from "./components/Landing";
+import Console from "./components/Console";
 import "./App.css";
 
 function App() {
@@ -12,7 +20,9 @@ function App() {
         <BrowserRouter>
           <nav className="navbar">
             <div className="navbar-content">
-              <Link className="navbar-content-title" to="/">AWS Cognito React Starter</Link>
+              <Link className="navbar-content-title" to="/">
+                AWS Cognito React Starter
+              </Link>
               <div className="navbar-content-links">
                 <Link to="/signin">Sign in</Link>
                 <Link to="/signup">Sign up</Link>
@@ -20,11 +30,19 @@ function App() {
             </div>
           </nav>
           <div className="content">
-            <Routes>
-              <Route path="/signin" element={<SignIn />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="*" element={<Landing />} />
-            </Routes>
+            <AuthIsNotSignedIn>
+              <Routes>
+                <Route path="/signin" element={<SignIn />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/" element={<Landing />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </AuthIsNotSignedIn>
+            <AuthIsSignedIn>
+              <Routes>
+                <Route path="/console" element={<Console />} />
+              </Routes>
+            </AuthIsSignedIn>
           </div>
         </BrowserRouter>
       </AuthProvider>

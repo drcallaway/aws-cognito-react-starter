@@ -42,33 +42,35 @@ export default function SignUp() {
   const [created, setCreated] = useState(false);
   const [error, setError] = useState("");
   const [code, setCode] = useState("");
+  const [working, setWorking] = useState(false);
   const authContext = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
 
     try {
+      setWorking(true);
+      setError("");
       await authContext.signUpWithEmail(email, email, password);
       setCreated(true);
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
       }
+    } finally {
+      setWorking(false);
     }
   };
 
   const handleVerify = async () => {
     try {
+      setWorking(true);
       await authContext.verifyCode(email, code);
       navigate("/signin");
     } catch (err) {
       setError("Invalid Code");
+      setWorking(false);
     }
   };
 
@@ -143,7 +145,13 @@ export default function SignUp() {
               />
             </Grid>
           </Grid>
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+            disabled={working}
+          >
             Sign Up
           </Button>
           <Grid container justifyContent="flex-end">
@@ -162,7 +170,13 @@ export default function SignUp() {
   const verify = (
     <>
       <Typography variant="h6">{`Verfiy Code sent to ${email}`}</Typography>
-
+      {error && (
+        <Box mt={2}>
+          <Typography color="error" variant="body2">
+            {error}
+          </Typography>
+        </Box>
+      )}
       <Box m={4}>
         <TextField
           fullWidth
@@ -173,7 +187,7 @@ export default function SignUp() {
             setCode(evt.target.value);
           }}
         />
-        <Button onClick={handleVerify} color="primary" variant="contained">
+        <Button onClick={handleVerify} color="primary" variant="contained" disabled={working}>
           Send Code
         </Button>
       </Box>
