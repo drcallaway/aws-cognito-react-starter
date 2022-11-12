@@ -3,7 +3,7 @@ import {
   AuthProvider,
   AuthIsSignedIn,
   AuthIsNotSignedIn,
-} from "./auth/1authUtil";
+} from "./auth/authUtil";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 import SignOut from "./components/SignOut";
