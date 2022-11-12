@@ -1,8 +1,6 @@
 import { BrowserRouter, Route, Routes, Link, Navigate } from "react-router-dom";
 import {
   AuthProvider,
-  AuthContext,
-  AuthStatus,
   AuthIsSignedIn,
   AuthIsNotSignedIn,
 } from "./auth/AuthUtil";

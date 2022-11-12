@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useRef } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -13,49 +13,47 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
+import { getEmailAddress, setEmailAddress } from "../util/localStorage";
 import { AuthContext } from "../auth/AuthUtil";
-
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
 
 const theme = createTheme();
 
 export default function SignIn() {
   const [error, setError] = useState("");
   const [working, setWorking] = useState(false);
+  const storedEmail = getEmailAddress();
+  const [rememberMe, setRememberMe] = useState(!!storedEmail);
   const authContext = useContext(AuthContext);
   const navigate = useNavigate();
+  const passwordRef = useRef<HTMLFormElement>();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    const email = String(data.get("email"));
+    const password = String(data.get("password"));
 
     try {
       setWorking(true);
-      await authContext.signInWithEmail(data.get("email"), data.get("password"));
+      await authContext.signInWithEmail(email, password);
       navigate("/console");
     } catch (err) {
+      if (passwordRef?.current) {
+        passwordRef.current.value = "";
+        passwordRef.current.focus();
+      }
       if (err instanceof Error) {
         setError(err.message);
       }
     } finally {
       setWorking(false);
+      setEmailAddress(rememberMe ? email : "");
     }
+  };
+
+  const handleCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRememberMe(event.target.checked);
   };
 
   return (
@@ -92,7 +90,8 @@ export default function SignIn() {
               label="Email Address"
               name="email"
               autoComplete="email"
-              autoFocus
+              autoFocus={!storedEmail}
+              inputRef={input => storedEmail && input && (input.value = storedEmail)}
             />
             <TextField
               margin="normal"
@@ -103,9 +102,11 @@ export default function SignIn() {
               type="password"
               id="password"
               autoComplete="current-password"
+              autoFocus={!!storedEmail}
+              inputRef={passwordRef}
             />
             <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
+              control={<Checkbox value="remember" color="primary" checked={rememberMe} onChange={handleCheck} />}
               label="Remember me"
             />
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} disabled={working} >
@@ -118,14 +119,13 @@ export default function SignIn() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/signup" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>
   );
