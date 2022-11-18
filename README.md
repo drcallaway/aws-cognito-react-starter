@@ -18,9 +18,16 @@ git remote set-url origin git@github.com:YOUR_USERNAME/YOUR_REPO
 git push
 ```
 
-Next, you'll need to create a new Cognito user pool in the AWS console. You'll then need to copy the
-user pool ID and app client ID from the AWS console into the [userPool.ts](/src/auth/userPool.ts)
-file. Finally, install the dependencies and run the project like this:
+Next, you'll need to create a new Cognito user pool in the AWS console and capture the user pool ID
+and app client ID. You'll then create a new file named `.env.local` in the project root composed of
+the following two lines:
+
+```
+VITE_COGNITO_USER_POOL_ID=<REPLACE WITH USER POOL ID>
+VITE_COGNITO_APP_CLIENT_ID=<REPLACE WITH APP CLIENT ID>
+```
+
+Finally, install the dependencies and run the project like this:
 
 ```
 yarn && yarn dev
