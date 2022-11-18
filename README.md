@@ -18,9 +18,9 @@ git remote set-url origin git@github.com:YOUR_USERNAME/YOUR_REPO
 git push
 ```
 
-Next, you'll need to create a new Cognito user pool in the AWS console and capture the user pool ID
-and app client ID. You'll then create a new file named `.env.local` in the project root composed of
-the following two lines:
+Next, you'll need to create a new Cognito user pool in the AWS console and note the user pool ID and
+app client ID. You'll then create a new file named `.env.local` in the project root composed of the
+following two lines:
 
 ```
 VITE_COGNITO_USER_POOL_ID=<REPLACE WITH USER POOL ID>
@@ -34,4 +34,4 @@ yarn && yarn dev
 ```
 
 Thanks to [dbroadburst](https://github.com/dbroadhurst/aws-cognito-react) from whom I borrowed some
-code to create this project.
+of the code to create this project.
