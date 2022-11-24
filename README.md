@@ -30,8 +30,8 @@ VITE_COGNITO_APP_CLIENT_ID=<REPLACE WITH APP CLIENT ID>
 Finally, install the dependencies and run the project like this:
 
 ```
-yarn && yarn dev
+npm install && npm run dev
 ```
 
-Thanks to [dbroadburst](https://github.com/dbroadhurst/aws-cognito-react) from whom I borrowed some
-of the code to create this project.
+Thanks to [dbroadburst](https://github.com/dbroadhurst/aws-cognito-react) from whom I borrowed much
+of the code used to create this project.

@@ -21,7 +21,7 @@ export const useValidEmail = (initialValue: string = '') => {
 
 export const useValidPassword = (initialPassword = '', initialConfirmPassword = '') => {
   const [password, setPassword] = useState(initialPassword);
-  const [confirmPassword, setConfirmPassword] = useState(initialPassword);
+  const [confirmPassword, setConfirmPassword] = useState(initialConfirmPassword);
   const [passwordIsValid, setPasswordIsValid] = useState(true);
   const [confirmPasswordIsValid, setConfirmPasswordIsValid] = useState(true);
 
