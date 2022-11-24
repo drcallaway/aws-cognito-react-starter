@@ -30,7 +30,7 @@ VITE_COGNITO_APP_CLIENT_ID=<REPLACE WITH APP CLIENT ID>
 Finally, install the dependencies and run the project like this:
 
 ```
-npm install && npm run dev
+npm i && npm run dev
 ```
 
 Thanks to [dbroadburst](https://github.com/dbroadhurst/aws-cognito-react) from whom I borrowed much
