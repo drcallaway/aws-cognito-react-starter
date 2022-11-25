@@ -158,7 +158,7 @@ export default function SignUp() {
   );
 
   const verify = (
-    <>
+    <Box display="flex" flexDirection="column" alignItems="center">
       <Typography variant="h6">{`Verfiy Code sent to ${email}`}</Typography>
       {error && (
         <Box mt={2}>
@@ -167,7 +167,7 @@ export default function SignUp() {
           </Typography>
         </Box>
       )}
-      <Box m={4}>
+      <Box mt={4} display="flex" alignItems="center">
         <TextField
           fullWidth
           variant="outlined"
@@ -177,11 +177,11 @@ export default function SignUp() {
             setCode(evt.target.value);
           }}
         />
-        <Button onClick={handleVerify} color="primary" variant="contained" disabled={working}>
+        <Button sx={{ml: "10px", flexShrink: "0"}} onClick={handleVerify} color="primary" variant="contained" disabled={working}>
           Send Code
         </Button>
       </Box>
-    </>
+    </Box>
   );
 
   return (
