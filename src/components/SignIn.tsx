@@ -10,8 +10,9 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import Alert from "@mui/material/Alert";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { getEmailAddress, setEmailAddress } from "../util/localStorage";
 import { AuthContext } from "../auth/authUtil";
 import { useValidEmail, useValidPassword } from "../auth/hooks";
@@ -32,6 +33,7 @@ export default function SignIn() {
   const [buttonEnabled, setButtonEnabled] = useState(false);
   const authContext = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     setButtonEnabled(emailIsValid && passwordIsValid && !working);
@@ -79,6 +81,7 @@ export default function SignIn() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
+          {location.search.includes("newAccount") && <Alert severity="info">Account created. Sign in with your new credentials.</Alert>}
           {error && (
             <Box mt={2}>
               <Typography color="error" variant="body2">

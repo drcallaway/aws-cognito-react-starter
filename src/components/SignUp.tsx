@@ -8,6 +8,7 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import Alert from "@mui/material/Alert";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../auth/authUtil";
@@ -59,7 +60,7 @@ export default function SignUp() {
     try {
       setWorking(true);
       await authContext.verifyCode(email, code);
-      navigate("/signin");
+      navigate("/signin?newAccount");
     } catch (err) {
       setError("Invalid Code");
       setWorking(false);
@@ -160,7 +161,8 @@ export default function SignUp() {
 
   const verify = (
     <Box display="flex" flexDirection="column" alignItems="center">
-      <Typography variant="h6">{`Verfiy Code sent to ${email}`}</Typography>
+      <Typography component="h1" variant="h5">Verify Account</Typography>
+      <Alert severity="info">Verify code sent to {email}</Alert>
       {error && (
         <Box mt={2}>
           <Typography color="error" variant="body2">
