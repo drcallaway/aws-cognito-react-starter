@@ -31,6 +31,7 @@ export default function SignUp() {
   const [working, setWorking] = useState(false);
   const [buttonEnabled, setButtonEnabled] = useState(false);
   const authContext = useContext(AuthContext);
+  const hasInvalidPassword = !!password && !passwordIsValid;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -110,10 +111,10 @@ export default function SignUp() {
                 required
                 fullWidth
                 name="password"
-                label="Password"
+                label={hasInvalidPassword ? "Password (8+ characters with uppercase, lowercase, and number)" : "Password"}
                 type="password"
                 id="password"
-                error={!!password && !passwordIsValid}
+                error={hasInvalidPassword}
                 value={password}
                 onChange={(evt: React.ChangeEvent<HTMLTextAreaElement>) => {
                   setPassword(evt.target.value);
@@ -171,7 +172,7 @@ export default function SignUp() {
         <TextField
           fullWidth
           variant="outlined"
-          label={code.length > 0 ? "Code" : "Minimum 6 characters"}
+          label={code.length > 0 ? "Minimum 6 characters" : "Code"}
           error={code.length > 0 && code.length < 6}
           onChange={(evt: React.ChangeEvent<HTMLTextAreaElement>) => {
             setCode(evt.target.value);

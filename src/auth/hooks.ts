@@ -26,7 +26,7 @@ export const useValidPassword = (initialPassword = '', initialConfirmPassword = 
   const [confirmPasswordIsValid, setConfirmPasswordIsValid] = useState(true);
 
   useEffect(() => {
-    setPasswordIsValid(yup.string().min(8).isValidSync(password));
+    setPasswordIsValid(yup.string().min(8).matches(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/).isValidSync(password));
     setConfirmPasswordIsValid(password === confirmPassword);
   }, [password, confirmPassword]);
 
