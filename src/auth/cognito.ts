@@ -12,9 +12,8 @@ function getCognitoUser(username: string) {
     Username: username,
     Pool: userPool,
   }
-  const cognitoUser = new CognitoUser(userData)
 
-  return cognitoUser
+  return new CognitoUser(userData)
 }
 
 export async function getSession() {
@@ -99,6 +98,22 @@ export function signOut() {
   if (currentUser) {
     currentUser.signOut()
   }
+}
+
+export async function resendConfirmationCode(username: string) {
+  return new Promise(function (resolve, reject) {
+    const cognitoUser = getCognitoUser(username)
+
+    cognitoUser.resendConfirmationCode(function (err, result) {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(result)
+      }
+    })
+  }).catch((err) => {
+    throw err
+  })
 }
 
 export async function getAttributes() {

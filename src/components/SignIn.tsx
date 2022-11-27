@@ -16,10 +16,13 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { getEmailAddress, setEmailAddress } from "../util/localStorage";
 import { AuthContext } from "../auth/authUtil";
 import { useValidEmail, useValidPassword } from "../auth/hooks";
+import { resendConfirmationCode } from "../auth/cognito";
 
 const theme = createTheme();
 
 export default function SignIn() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const storedEmail = getEmailAddress();
   const { email, setEmail, emailIsValid } = useValidEmail(storedEmail);
   const {
@@ -32,8 +35,6 @@ export default function SignIn() {
   const [rememberMe, setRememberMe] = useState(!!storedEmail);
   const [buttonEnabled, setButtonEnabled] = useState(false);
   const authContext = useContext(AuthContext);
-  const navigate = useNavigate();
-  const location = useLocation();
 
   useEffect(() => {
     setButtonEnabled(emailIsValid && passwordIsValid && !working);
@@ -52,7 +53,20 @@ export default function SignIn() {
       navigate("/console");
     } catch (err) {
       if (err instanceof Error) {
-        setError(err.message);
+        let message = err.message;
+        if (err.name === "UserNotConfirmedException") {
+          try {
+            await resendConfirmationCode(email);
+            navigate("/signup", { replace: true, state: { email }});      
+          } catch (err) {
+            if (err instanceof Error) {
+              message = err.message;
+            }
+          }
+        }
+        setError(message);
+      } else {
+        setError("Unknown error. Please try again later.");
       }
     } finally {
       setWorking(false);

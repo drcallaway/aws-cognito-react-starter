@@ -10,14 +10,17 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Alert from "@mui/material/Alert";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../auth/authUtil";
 import { useValidEmail, useValidPassword } from "../auth/hooks";
+import { resendConfirmationCode } from "../auth/cognito";
 
 const theme = createTheme();
 
 export default function SignUp() {
-  const { email, setEmail, emailIsValid } = useValidEmail();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { email, setEmail, emailIsValid } = useValidEmail(location.state?.email);
   const {
     password,
     setPassword,
@@ -26,14 +29,13 @@ export default function SignUp() {
     passwordIsValid,
     confirmPasswordIsValid,
   } = useValidPassword();
-  const [created, setCreated] = useState(false);
+  const [created, setCreated] = useState(!!email);
   const [error, setError] = useState("");
   const [code, setCode] = useState("");
   const [working, setWorking] = useState(false);
   const [buttonEnabled, setButtonEnabled] = useState(false);
   const authContext = useContext(AuthContext);
   const hasInvalidPassword = !!password && !passwordIsValid;
-  const navigate = useNavigate();
 
   useEffect(() => {
     setButtonEnabled(emailIsValid && passwordIsValid && confirmPasswordIsValid && !working);
@@ -62,7 +64,9 @@ export default function SignUp() {
       await authContext.verifyCode(email, code);
       navigate("/signin?newAccount");
     } catch (err) {
-      setError("Invalid Code");
+      if (err instanceof Error) {
+        setError(err.message);
+      }
       setWorking(false);
     }
   };
@@ -159,6 +163,17 @@ export default function SignUp() {
     </>
   );
 
+  const resendCode = async () => {
+    try {
+      await resendConfirmationCode(email);
+      alert(`Code resent to ${email}`);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      }
+    }
+  };
+
   const verify = (
     <Box display="flex" flexDirection="column" alignItems="center">
       <Typography component="h1" variant="h5">Verify Account</Typography>
@@ -174,7 +189,7 @@ export default function SignUp() {
         <TextField
           fullWidth
           variant="outlined"
-          label={code.length > 0 ? "Minimum 6 characters" : "Code"}
+          label="Code"
           error={code.length > 0 && code.length < 6}
           onChange={(evt: React.ChangeEvent<HTMLTextAreaElement>) => {
             setCode(evt.target.value);
@@ -184,6 +199,9 @@ export default function SignUp() {
           Send Code
         </Button>
       </Box>
+      <Link component="button" variant="body2" onClick={resendCode} sx={{marginTop: 1}}>
+        Resend code
+      </Link>
     </Box>
   );
 
