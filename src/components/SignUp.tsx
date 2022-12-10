@@ -104,6 +104,7 @@ export default function SignUp() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                autoFocus={true}
                 error={!!email && !emailIsValid}
                 value={email}
                 onChange={(evt: React.ChangeEvent<HTMLTextAreaElement>) => {
