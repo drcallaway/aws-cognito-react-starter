@@ -54,7 +54,7 @@ function App() {
               </AuthIsSignedIn>
             </Toolbar>
           </AppBar>
-          <Box margin="20px auto" width="1200px">
+          <Box margin="75px auto" width="1200px">
             <AuthIsNotSignedIn>
               <Routes>
                 <Route path="/signin" element={<SignIn />} />
