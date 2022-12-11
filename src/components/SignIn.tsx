@@ -68,6 +68,7 @@ export default function SignIn() {
       } else {
         setError("Unknown error. Please try again later.");
       }
+      setPassword(""); //clear password
     } finally {
       setWorking(false);
       setEmailAddress(rememberMe ? email : "");
