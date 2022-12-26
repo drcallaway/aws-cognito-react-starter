@@ -69,7 +69,7 @@ export const AuthProvider = ({ children }: Props) => {
         window.localStorage.setItem("refreshToken", `${session.refreshToken.token}`);
         await setAttribute({
           Name: "website",
-          Value: "https://github.com/dbroadhurst/aws-cognito-react",
+          Value: "https://github.com/drcallaway/aws-cognito-react-starter",
         });
         const attr: any = await getAttributes();
         setAttrInfo(attr);

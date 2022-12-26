@@ -10,7 +10,7 @@ To use, first clone the repo to your own project:
 git clone git@github.com:drcallaway/aws-cognito-react-starter.git YOUR_PROJECT
 ```
 
-Then create a new GitHub repo and point your local project to it:
+Then create a new empty repo using the GitHub console and point your local project to it:
 
 ```
 cd YOUR_PROJECT
