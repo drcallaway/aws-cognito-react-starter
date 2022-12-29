@@ -106,6 +106,8 @@ export const AuthProvider = ({ children }: Props) => {
   function signOut() {
     cognito.signOut();
     setAuthStatus(AuthStatus.SignedOut);
+    window.localStorage.removeItem("accessToken");
+    window.localStorage.removeItem("refreshToken");
   }
 
   async function verifyCode(username: string, code: string) {
